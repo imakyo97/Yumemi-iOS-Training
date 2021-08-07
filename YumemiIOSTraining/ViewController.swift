@@ -8,9 +8,11 @@
 import UIKit
 import YumemiWeather
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
 
     @IBOutlet private weak var weatherImageView: UIImageView!
+    @IBOutlet private weak var minTempLabel: UILabel!
+    @IBOutlet private weak var maxTempLabel: UILabel!
 
     enum Weather {
         static let sunny = "sunny"
@@ -24,8 +26,14 @@ class ViewController: UIViewController {
 
     @IBAction func didTapReloadButton(_ sender: Any) {
         do {
-            let stringWeather = try YumemiWeather.fetchWeather(at: "tokyo")
-            switch stringWeather {
+            guard let jsonString = encodeFetchWeatherParameter(
+                    area: "tokyo", date: Date()) else { return }
+            let jsonStringWeather = try YumemiWeather.fetchWeather(jsonString)
+            guard let weatherData = decodeFetchWeatherReturns(
+                    jsonString: jsonStringWeather) else { return }
+            maxTempLabel.text = String(weatherData.max_temp)
+            minTempLabel.text = String(weatherData.min_temp)
+            switch weatherData.weather {
             case Weather.sunny:
                 let sunnyImage = UIImage(named: Weather.sunny)
                 weatherImageView.image = sunnyImage
@@ -67,6 +75,25 @@ class ViewController: UIViewController {
         alert.message = message
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+
+    private func encodeFetchWeatherParameter(area: String, date: Date) -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        let dateString = dateFormatter.string(from: date)
+        let encoder = JSONEncoder()
+        let encoded = try? encoder.encode(["area": area, "date": dateString])
+        guard let encoded = encoded else { return nil }
+        let jsonString = String(data: encoded, encoding: .utf8)
+        return jsonString
+    }
+
+    private func decodeFetchWeatherReturns(jsonString: String) -> WeatherData?{
+        let decoder = JSONDecoder()
+        guard let jsonData = jsonString.data(using: .utf8) else { return nil }
+        guard let weatherData = try? decoder.decode(
+                WeatherData.self, from: jsonData) else { return nil }
+        return weatherData
     }
 }
 
