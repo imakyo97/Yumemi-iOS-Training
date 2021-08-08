@@ -78,11 +78,9 @@ final class ViewController: UIViewController {
     }
 
     private func encodeFetchWeatherParameter(area: String, date: Date) -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        let dateString = dateFormatter.string(from: date)
+        let fetchWeatherParameter = FetchWeatherParameter(area: area, date: date)
         let encoder = JSONEncoder()
-        let encoded = try? encoder.encode(["area": area, "date": dateString])
+        let encoded = try? encoder.encode(fetchWeatherParameter)
         guard let encoded = encoded else { return nil }
         let jsonString = String(data: encoded, encoding: .utf8)
         return jsonString
