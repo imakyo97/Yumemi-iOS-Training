@@ -93,5 +93,9 @@ final class ViewController: UIViewController {
                 WeatherData.self, from: jsonData) else { return nil }
         return weatherData
     }
+
+    @IBAction func didTapCloseButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
