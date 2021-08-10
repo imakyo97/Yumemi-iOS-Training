@@ -22,9 +22,30 @@ final class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        settingWillEnterForegroundObserver()
+    }
+
+    private func settingWillEnterForegroundObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleNotification(_:)),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleNotification(_ notification: Notification) {
+        showWeather()
     }
 
     @IBAction func didTapReloadButton(_ sender: Any) {
+        showWeather()
+    }
+
+    private func showWeather() {
         do {
             guard let jsonString = encodeFetchWeatherParameter(
                     area: "tokyo", date: Date()) else { return }
