@@ -24,9 +24,9 @@ class FirstViewController: UIViewController {
             bundle: nil
         )
         let viewController = storyBoard
-            .instantiateViewController(
-                withIdentifier: "ViewController"
-            ) as! ViewController
+            .instantiateViewController(identifier: "ViewController", creator: { coder in
+                ViewController(coder: coder, weatherModel: WeatherModelImpl())
+            })
         viewController.modalPresentationStyle = .fullScreen
         present(
             viewController,

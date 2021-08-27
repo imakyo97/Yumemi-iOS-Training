@@ -16,16 +16,26 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var minTempLabel: UILabel!
     @IBOutlet private weak var maxTempLabel: UILabel!
 
+    private var weatherData: WeatherData!
+
     enum Weather {
         static let sunny = "sunny"
         static let cloudy = "cloudy"
         static let rainy = "rainy"
     }
 
+    init?(coder: NSCoder, weatherModel: WeatherModel) {
+        self.weatherModel = weatherModel
+        super.init(coder: coder)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         settingWillEnterForegroundObserver()
-        weatherModel = WeatherModelImpl()
     }
 
     private func settingWillEnterForegroundObserver() {
@@ -41,17 +51,22 @@ final class ViewController: UIViewController {
     }
 
     @objc private func handleNotification(_ notification: Notification) {
+        fetchWeatherData()
         showWeather()
     }
 
     @IBAction func didTapReloadButton(_ sender: Any) {
+        fetchWeatherData()
         showWeather()
     }
 
-    private func showWeather() {
-        guard let weatherData = weatherModel?.fetchWeather( alertMessage: { [weak self] in
+    private func fetchWeatherData() {
+        self.weatherData = weatherModel?.fetchWeather( alertMessage: { [weak self] in
             self?.presentAlertController(message: $0)
-        }) else { return }
+        })
+    }
+
+    private func showWeather() {
         maxTempLabel.text = String(weatherData.max_temp)
         minTempLabel.text = String(weatherData.min_temp)
         switch weatherData.weather {
