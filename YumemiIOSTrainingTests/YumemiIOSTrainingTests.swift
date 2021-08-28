@@ -32,78 +32,77 @@ class YumemiIOSTrainingTests: XCTestCase {
     }
 
     func testShowSunny() {
-        let viewController = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(
-                identifier: "ViewController",
-                creator: { coder in
-                    ViewController(
-                        coder: coder,
-                        weatherModel: MockWeatherModel(weather: "sunny")
-                    )
-                })
+        let sunny = "sunny"
+
+        let viewController = instantiateViewController(
+            weatherModel: MockWeatherModel(weather: sunny)
+        )
         viewController.loadViewIfNeeded()
 
-        let reloadButton: UIButton = viewController.view.subviews
-            .compactMap { $0 as? UIButton }
-            .filter { $0.titleLabel?.text == "Reload" }.first!
+        let reloadButton: UIButton = fetchReloadButton(from: viewController)
         reloadButton.sendActions(for: .touchUpInside)
-        let stackView: UIStackView = viewController.view.subviews
-            .first(where: { $0 is UIStackView } ) as! UIStackView
-        let imageView: UIImageView = stackView.subviews
-            .first(where: { $0 is UIImageView} ) as! UIImageView
-        let image: UIImage = imageView.image!
-        let sunnyImage: UIImage = UIImage(named: "sunny")!
-        XCTAssertEqual(image, sunnyImage)
+
+        let weatherImage: UIImage = fetchWeatherImage(from: viewController)
+        let sunnyImage: UIImage = UIImage(named: sunny)!
+        XCTAssertEqual(weatherImage, sunnyImage)
     }
 
     func testShowCloudy() {
-        let viewController = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(
-                identifier: "ViewController",
-                creator: { coder in
-                    ViewController(
-                        coder: coder,
-                        weatherModel: MockWeatherModel(weather: "cloudy")
-                    )
-                })
+        let cloudy = "cloudy"
+
+        let viewController = instantiateViewController(
+            weatherModel: MockWeatherModel(weather: cloudy)
+        )
         viewController.loadViewIfNeeded()
 
-        let reloadButton: UIButton = viewController.view.subviews
-            .compactMap { $0 as? UIButton }
-            .filter { $0.titleLabel?.text == "Reload" }.first!
+        let reloadButton: UIButton = fetchReloadButton(from: viewController)
         reloadButton.sendActions(for: .touchUpInside)
-        let stackView: UIStackView = viewController.view.subviews
-            .first(where: { $0 is UIStackView } ) as! UIStackView
-        let imageView: UIImageView = stackView.subviews
-            .first(where: { $0 is UIImageView} ) as! UIImageView
-        let image: UIImage = imageView.image!
-        let sunnyImage: UIImage = UIImage(named: "cloudy")!
-        XCTAssertEqual(image, sunnyImage)
+
+        let weatherImage: UIImage = fetchWeatherImage(from: viewController)
+        let sunnyImage: UIImage = UIImage(named: cloudy)!
+        XCTAssertEqual(weatherImage, sunnyImage)
     }
 
     func testShowRainy() {
-        let viewController = UIStoryboard(name: "Main", bundle: nil)
+        let rainy = "rainy"
+
+        let viewController = instantiateViewController(
+            weatherModel: MockWeatherModel(weather: rainy)
+        )
+        viewController.loadViewIfNeeded()
+
+        let reloadButton: UIButton = fetchReloadButton(from: viewController)
+        reloadButton.sendActions(for: .touchUpInside)
+
+        let weatherImage: UIImage = fetchWeatherImage(from: viewController)
+        let sunnyImage: UIImage = UIImage(named: rainy)!
+        XCTAssertEqual(weatherImage, sunnyImage)
+    }
+
+    private func instantiateViewController(weatherModel: WeatherModel) -> ViewController {
+        UIStoryboard(name: "Main", bundle: nil)
             .instantiateViewController(
                 identifier: "ViewController",
                 creator: { coder in
                     ViewController(
                         coder: coder,
-                        weatherModel: MockWeatherModel(weather: "rainy")
+                        weatherModel: weatherModel
                     )
                 })
-        viewController.loadViewIfNeeded()
+    }
 
-        let reloadButton: UIButton = viewController.view.subviews
+    private func fetchReloadButton(from vc: ViewController) -> UIButton {
+        vc.view.subviews
             .compactMap { $0 as? UIButton }
             .filter { $0.titleLabel?.text == "Reload" }.first!
-        reloadButton.sendActions(for: .touchUpInside)
-        let stackView: UIStackView = viewController.view.subviews
+    }
+
+    private func fetchWeatherImage(from vc: ViewController) -> UIImage {
+        let stackView: UIStackView = vc.view.subviews
             .first(where: { $0 is UIStackView } ) as! UIStackView
         let imageView: UIImageView = stackView.subviews
             .first(where: { $0 is UIImageView} ) as! UIImageView
-        let image: UIImage = imageView.image!
-        let sunnyImage: UIImage = UIImage(named: "rainy")!
-        XCTAssertEqual(image, sunnyImage)
+        return imageView.image!
     }
 }
 
