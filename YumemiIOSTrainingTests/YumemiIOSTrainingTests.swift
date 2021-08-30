@@ -79,6 +79,27 @@ class YumemiIOSTrainingTests: XCTestCase {
         XCTAssertEqual(weatherImage, sunnyImage)
     }
 
+    func testShowTempLabelText() {
+        let sunny = "sunny"
+        let mockWeatherModel = MockWeatherModel(weather: sunny)
+
+        let viewController = instantiateViewController(
+            weatherModel: mockWeatherModel
+        )
+        viewController.loadViewIfNeeded()
+
+        let reloadButton: UIButton =
+            fetchReloadButton(from: viewController)
+        reloadButton.sendActions(for: .touchUpInside)
+
+        let tempLabels: [String : UILabel] =
+            fetchTempLabe(from: viewController)
+        XCTAssertEqual(tempLabels["minTempLabel"]?.text,
+                       String(mockWeatherModel.min_temp))
+        XCTAssertEqual(tempLabels["maxTempLabel"]?.text,
+                       String(mockWeatherModel.max_temp))
+    }
+
     private func instantiateViewController(weatherModel: WeatherModel) -> ViewController {
         UIStoryboard(name: "Main", bundle: nil)
             .instantiateViewController(
@@ -104,18 +125,45 @@ class YumemiIOSTrainingTests: XCTestCase {
             .first(where: { $0 is UIImageView} ) as! UIImageView
         return imageView.image!
     }
+
+    private func fetchTempLabe(from vc: ViewController) -> [String: UILabel] {
+
+        var tempLabels: [String: UILabel] {
+            [
+                "minTempLabel" : minTempLabel,
+                "maxTempLabel" : maxTempLabel
+            ]
+        }
+
+        let stackView: UIStackView = vc.view.subviews.first(where: { $0 is UIStackView  } ) as! UIStackView
+        let stackViewInStackView: UIStackView = stackView.subviews.first(where: { $0 is UIStackView } ) as! UIStackView
+        let minTempLabel: UILabel = stackViewInStackView.subviews
+            .compactMap { $0 as? UILabel }
+            .filter { $0.restorationIdentifier == "minTempLabel"}.first!
+        let maxTempLabel: UILabel = stackViewInStackView.subviews
+            .compactMap { $0 as? UILabel }
+            .filter { $0.restorationIdentifier == "maxTempLabel"}.first!
+        return tempLabels
+    }
 }
 
 final class MockWeatherModel: WeatherModel {
 
     private let weatherData: WeatherData
 
+    let max_temp: Int = 30
+    let min_temp: Int = 25
+
     init(weather: String) {
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let stringDate = dateFormatter.string(from: date)
-        weatherData = WeatherData(max_temp: 30, min_temp: 25, weather: weather, date: stringDate)
+        weatherData = WeatherData(
+            max_temp: max_temp,
+            min_temp: min_temp,
+            weather: weather, date: stringDate
+        )
     }
 
     func fetchWeather(alertMessage: (String) -> Void) -> WeatherData? {

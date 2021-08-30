@@ -18,10 +18,10 @@ class YumemiIOSTrainingUITests: XCTestCase {
     override func tearDownWithError() throws {
     }
 
-    func testExample() throws {
+    func xtestExample() throws {
     }
 
-    func testLaunchPerformance() throws {
+    func xtestLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             measure(metrics: [XCTApplicationLaunchMetric()]) {
                 XCUIApplication().launch()
