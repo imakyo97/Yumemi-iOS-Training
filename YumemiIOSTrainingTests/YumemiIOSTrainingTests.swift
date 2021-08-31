@@ -11,26 +11,6 @@ import XCTest
 
 class YumemiIOSTrainingTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
     func testShowSunny() {
         let sunny = "sunny"
 
@@ -44,7 +24,7 @@ class YumemiIOSTrainingTests: XCTestCase {
 
         let weatherImage: UIImage = fetchWeatherImage(from: viewController)
         let sunnyImage: UIImage = UIImage(named: sunny)!
-        XCTAssertEqual(weatherImage, sunnyImage)
+        XCTAssertEqual(weatherImage, sunnyImage, "画面に晴れ画像が表示されること")
     }
 
     func testShowCloudy() {
@@ -59,8 +39,8 @@ class YumemiIOSTrainingTests: XCTestCase {
         reloadButton.sendActions(for: .touchUpInside)
 
         let weatherImage: UIImage = fetchWeatherImage(from: viewController)
-        let sunnyImage: UIImage = UIImage(named: cloudy)!
-        XCTAssertEqual(weatherImage, sunnyImage)
+        let cloudyImage: UIImage = UIImage(named: cloudy)!
+        XCTAssertEqual(weatherImage, cloudyImage, "画面に曇り画像が表示されること")
     }
 
     func testShowRainy() {
@@ -75,8 +55,8 @@ class YumemiIOSTrainingTests: XCTestCase {
         reloadButton.sendActions(for: .touchUpInside)
 
         let weatherImage: UIImage = fetchWeatherImage(from: viewController)
-        let sunnyImage: UIImage = UIImage(named: rainy)!
-        XCTAssertEqual(weatherImage, sunnyImage)
+        let rainyImage: UIImage = UIImage(named: rainy)!
+        XCTAssertEqual(weatherImage, rainyImage, "画面に雨画像が表示されること")
     }
 
     func testShowTempLabelText() {
@@ -95,9 +75,11 @@ class YumemiIOSTrainingTests: XCTestCase {
         let tempLabels: [String : UILabel] =
             fetchTempLabe(from: viewController)
         XCTAssertEqual(tempLabels["minTempLabel"]?.text,
-                       String(mockWeatherModel.min_temp))
+                       String(mockWeatherModel.min_temp),
+                       "天気予報の最低気温がUILabelに反映されること")
         XCTAssertEqual(tempLabels["maxTempLabel"]?.text,
-                       String(mockWeatherModel.max_temp))
+                       String(mockWeatherModel.max_temp),
+                       "天気予報の最高気温がUILabelに反映されること")
     }
 
     private func instantiateViewController(weatherModel: WeatherModel) -> ViewController {
