@@ -8,8 +8,15 @@
 import Foundation
 
 struct WeatherData: Codable {
-    let max_temp: Int
-    let min_temp: Int
+    let maxTemp: Int
+    let minTemp: Int
     let weather: String
     let date: String
+
+    enum CodingKeys : String, CodingKey {
+        case maxTemp = "max_temp"
+        case minTemp = "min_temp"
+        case weather
+        case date
+    }
 }

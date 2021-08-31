@@ -75,10 +75,10 @@ class YumemiIOSTrainingTests: XCTestCase {
         let tempLabels: [String : UILabel] =
             fetchTempLabe(from: viewController)
         XCTAssertEqual(tempLabels["minTempLabel"]?.text,
-                       String(mockWeatherModel.min_temp),
+                       String(mockWeatherModel.minTemp),
                        "天気予報の最低気温がUILabelに反映されること")
         XCTAssertEqual(tempLabels["maxTempLabel"]?.text,
-                       String(mockWeatherModel.max_temp),
+                       String(mockWeatherModel.maxTemp),
                        "天気予報の最高気温がUILabelに反映されること")
     }
 
@@ -133,8 +133,8 @@ final class MockWeatherModel: WeatherModel {
 
     private let weatherData: WeatherData
 
-    let max_temp: Int = 30
-    let min_temp: Int = 25
+    let maxTemp: Int = 30
+    let minTemp: Int = 25
 
     init(weather: String) {
         let date = Date()
@@ -142,8 +142,8 @@ final class MockWeatherModel: WeatherModel {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         let stringDate = dateFormatter.string(from: date)
         weatherData = WeatherData(
-            max_temp: max_temp,
-            min_temp: min_temp,
+            maxTemp: maxTemp,
+            minTemp: minTemp,
             weather: weather, date: stringDate
         )
     }

@@ -16,7 +16,6 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var minTempLabel: UILabel!
     @IBOutlet private weak var maxTempLabel: UILabel!
 
-    private var weatherData: WeatherData!
 
     enum Weather {
         static let sunny = "sunny"
@@ -51,24 +50,19 @@ final class ViewController: UIViewController {
     }
 
     @objc private func handleNotification(_ notification: Notification) {
-        fetchWeatherData()
         showWeather()
     }
 
     @IBAction func didTapReloadButton(_ sender: Any) {
-        fetchWeatherData()
         showWeather()
     }
 
-    private func fetchWeatherData() {
-        self.weatherData = weatherModel?.fetchWeather( alertMessage: { [weak self] in
-            self?.presentAlertController(message: $0)
-        })
-    }
-
     private func showWeather() {
-        maxTempLabel.text = String(weatherData.max_temp)
-        minTempLabel.text = String(weatherData.min_temp)
+        guard let weatherData = weatherModel?.fetchWeather( alertMessage: { [weak self] in
+            self?.presentAlertController(message: $0)
+        }) else { return }
+        maxTempLabel.text = String(weatherData.maxTemp)
+        minTempLabel.text = String(weatherData.minTemp)
         switch weatherData.weather {
         case Weather.sunny:
             let sunnyImage = UIImage(named: Weather.sunny)
