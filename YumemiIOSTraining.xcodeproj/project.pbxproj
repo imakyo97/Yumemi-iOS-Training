@@ -17,19 +17,11 @@
 		470D847926BE27F000B201CE /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470D847826BE27F000B201CE /* WeatherData.swift */; };
 		470D847D26BFB11E00B201CE /* FetchWeatherParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470D847C26BFB11E00B201CE /* FetchWeatherParameter.swift */; };
 		470D847F26C0C1E300B201CE /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470D847E26C0C1E300B201CE /* FirstViewController.swift */; };
-		4779C57526D8C88F009F38FD /* YumemiIOSTrainingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779C57426D8C88F009F38FD /* YumemiIOSTrainingUITests.swift */; };
 		4779C58326D8C8AB009F38FD /* YumemiIOSTrainingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779C58226D8C8AB009F38FD /* YumemiIOSTrainingTests.swift */; };
 		4779FD8826C543EC00998204 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779FD8726C543EC00998204 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4779C57726D8C88F009F38FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 470D841226BA3DAF00B201CE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 470D841926BA3DB000B201CE;
-			remoteInfo = YumemiIOSTraining;
-		};
 		4779C58526D8C8AB009F38FD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 470D841226BA3DAF00B201CE /* Project object */;
@@ -51,9 +43,6 @@
 		470D847826BE27F000B201CE /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		470D847C26BFB11E00B201CE /* FetchWeatherParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchWeatherParameter.swift; sourceTree = "<group>"; };
 		470D847E26C0C1E300B201CE /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		4779C57226D8C88F009F38FD /* YumemiIOSTrainingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YumemiIOSTrainingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4779C57426D8C88F009F38FD /* YumemiIOSTrainingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YumemiIOSTrainingUITests.swift; sourceTree = "<group>"; };
-		4779C57626D8C88F009F38FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4779C58026D8C8AB009F38FD /* YumemiIOSTrainingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YumemiIOSTrainingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4779C58226D8C8AB009F38FD /* YumemiIOSTrainingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YumemiIOSTrainingTests.swift; sourceTree = "<group>"; };
 		4779C58426D8C8AB009F38FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -66,13 +55,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				470D843326BB7FC200B201CE /* YumemiWeather in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4779C56F26D8C88F009F38FD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				470D841C26BA3DB000B201CE /* YumemiIOSTraining */,
-				4779C57326D8C88F009F38FD /* YumemiIOSTrainingUITests */,
 				4779C58126D8C8AB009F38FD /* YumemiIOSTrainingTests */,
 				470D841B26BA3DB000B201CE /* Products */,
 			);
@@ -100,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				470D841A26BA3DB000B201CE /* YumemiIOSTraining.app */,
-				4779C57226D8C88F009F38FD /* YumemiIOSTrainingUITests.xctest */,
 				4779C58026D8C8AB009F38FD /* YumemiIOSTrainingTests.xctest */,
 			);
 			name = Products;
@@ -128,15 +108,6 @@
 				470D842126BA3DB000B201CE /* ViewController.swift */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		4779C57326D8C88F009F38FD /* YumemiIOSTrainingUITests */ = {
-			isa = PBXGroup;
-			children = (
-				4779C57426D8C88F009F38FD /* YumemiIOSTrainingUITests.swift */,
-				4779C57626D8C88F009F38FD /* Info.plist */,
-			);
-			path = YumemiIOSTrainingUITests;
 			sourceTree = "<group>";
 		};
 		4779C58126D8C8AB009F38FD /* YumemiIOSTrainingTests */ = {
@@ -181,24 +152,6 @@
 			productReference = 470D841A26BA3DB000B201CE /* YumemiIOSTraining.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4779C57126D8C88F009F38FD /* YumemiIOSTrainingUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4779C57B26D8C88F009F38FD /* Build configuration list for PBXNativeTarget "YumemiIOSTrainingUITests" */;
-			buildPhases = (
-				4779C56E26D8C88F009F38FD /* Sources */,
-				4779C56F26D8C88F009F38FD /* Frameworks */,
-				4779C57026D8C88F009F38FD /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4779C57826D8C88F009F38FD /* PBXTargetDependency */,
-			);
-			name = YumemiIOSTrainingUITests;
-			productName = YumemiIOSTrainingUITests;
-			productReference = 4779C57226D8C88F009F38FD /* YumemiIOSTrainingUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		4779C57F26D8C8AB009F38FD /* YumemiIOSTrainingTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4779C58726D8C8AB009F38FD /* Build configuration list for PBXNativeTarget "YumemiIOSTrainingTests" */;
@@ -229,10 +182,6 @@
 					470D841926BA3DB000B201CE = {
 						CreatedOnToolsVersion = 12.5.1;
 					};
-					4779C57126D8C88F009F38FD = {
-						CreatedOnToolsVersion = 12.5.1;
-						TestTargetID = 470D841926BA3DB000B201CE;
-					};
 					4779C57F26D8C8AB009F38FD = {
 						CreatedOnToolsVersion = 12.5.1;
 						TestTargetID = 470D841926BA3DB000B201CE;
@@ -256,7 +205,6 @@
 			projectRoot = "";
 			targets = (
 				470D841926BA3DB000B201CE /* YumemiIOSTraining */,
-				4779C57126D8C88F009F38FD /* YumemiIOSTrainingUITests */,
 				4779C57F26D8C8AB009F38FD /* YumemiIOSTrainingTests */,
 			);
 		};
@@ -270,13 +218,6 @@
 				470D842A26BA3DB000B201CE /* LaunchScreen.storyboard in Resources */,
 				470D842726BA3DB000B201CE /* Assets.xcassets in Resources */,
 				470D842526BA3DB000B201CE /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4779C57026D8C88F009F38FD /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,14 +245,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4779C56E26D8C88F009F38FD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4779C57526D8C88F009F38FD /* YumemiIOSTrainingUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4779C57C26D8C8AB009F38FD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -323,11 +256,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4779C57826D8C88F009F38FD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 470D841926BA3DB000B201CE /* YumemiIOSTraining */;
-			targetProxy = 4779C57726D8C88F009F38FD /* PBXContainerItemProxy */;
-		};
 		4779C58626D8C8AB009F38FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 470D841926BA3DB000B201CE /* YumemiIOSTraining */;
@@ -509,44 +437,6 @@
 			};
 			name = Release;
 		};
-		4779C57926D8C88F009F38FD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HAMLUR4PQA;
-				INFOPLIST_FILE = YumemiIOSTrainingUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyohei.YumemiIOSTrainingUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = YumemiIOSTraining;
-			};
-			name = Debug;
-		};
-		4779C57A26D8C88F009F38FD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HAMLUR4PQA;
-				INFOPLIST_FILE = YumemiIOSTrainingUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyohei.YumemiIOSTrainingUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = YumemiIOSTraining;
-			};
-			name = Release;
-		};
 		4779C58826D8C8AB009F38FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -604,15 +494,6 @@
 			buildConfigurations = (
 				470D842F26BA3DB000B201CE /* Debug */,
 				470D843026BA3DB000B201CE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4779C57B26D8C88F009F38FD /* Build configuration list for PBXNativeTarget "YumemiIOSTrainingUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4779C57926D8C88F009F38FD /* Debug */,
-				4779C57A26D8C88F009F38FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -104,7 +104,8 @@ class YumemiIOSTrainingTests: XCTestCase {
         let stackView: UIStackView = vc.view.subviews
             .first(where: { $0 is UIStackView } ) as! UIStackView
         let imageView: UIImageView = stackView.subviews
-            .first(where: { $0 is UIImageView} ) as! UIImageView
+            .compactMap { $0 as? UIImageView }
+            .filter { $0.restorationIdentifier == "WeatherImageView" }.first!
         return imageView.image!
     }
 
@@ -121,17 +122,17 @@ class YumemiIOSTrainingTests: XCTestCase {
         let stackViewInStackView: UIStackView = stackView.subviews.first(where: { $0 is UIStackView } ) as! UIStackView
         let minTempLabel: UILabel = stackViewInStackView.subviews
             .compactMap { $0 as? UILabel }
-            .filter { $0.restorationIdentifier == "minTempLabel"}.first!
+            .filter { $0.restorationIdentifier == "MinTempLabel"}.first!
         let maxTempLabel: UILabel = stackViewInStackView.subviews
             .compactMap { $0 as? UILabel }
-            .filter { $0.restorationIdentifier == "maxTempLabel"}.first!
+            .filter { $0.restorationIdentifier == "MaxTempLabel"}.first!
         return tempLabels
     }
 }
 
 final class MockWeatherModel: WeatherModel {
 
-    private let weatherData: WeatherData
+    private let weatherData: WeatherData?
 
     let maxTemp: Int = 30
     let minTemp: Int = 25
@@ -148,7 +149,7 @@ final class MockWeatherModel: WeatherModel {
         )
     }
 
-    func fetchWeather(alertMessage: (String) -> Void) -> WeatherData? {
+    func fetchWeather(alertMessage: @escaping (String) -> Void) -> WeatherData? {
         return weatherData
     }
 }

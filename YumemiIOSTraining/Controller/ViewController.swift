@@ -15,7 +15,7 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var weatherImageView: UIImageView!
     @IBOutlet private weak var minTempLabel: UILabel!
     @IBOutlet private weak var maxTempLabel: UILabel!
-
+    private let activityIndicatorView = UIActivityIndicatorView()
 
     enum Weather {
         static let sunny = "sunny"
@@ -35,6 +35,7 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         settingWillEnterForegroundObserver()
+        setupActivityIndicatorView()
     }
 
     private func settingWillEnterForegroundObserver() {
@@ -57,27 +58,45 @@ final class ViewController: UIViewController {
         showWeather()
     }
 
+    private func setupActivityIndicatorView() {
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .medium
+        activityIndicatorView.color = .gray
+        view.addSubview(activityIndicatorView)
+    }
+
     private func showWeather() {
-        guard let weatherData = weatherModel?.fetchWeather( alertMessage: { [weak self] in
-            self?.presentAlertController(message: $0)
-        }) else { return }
-        maxTempLabel.text = String(weatherData.maxTemp)
-        minTempLabel.text = String(weatherData.minTemp)
-        switch weatherData.weather {
-        case Weather.sunny:
-            let sunnyImage = UIImage(named: Weather.sunny)
-            weatherImageView.image = sunnyImage
-            weatherImageView.tintColor = .red
-        case Weather.cloudy:
-            let cloudyImage = UIImage(named: Weather.cloudy)
-            weatherImageView.image = cloudyImage
-            weatherImageView.tintColor = .gray
-        case Weather.rainy:
-            let rainyImage = UIImage(named: Weather.rainy)
-            weatherImageView.image = rainyImage
-            weatherImageView.tintColor = .blue
-        default:
-            return
+        activityIndicatorView.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            guard let weatherData =
+                    self.weatherModel?.fetchWeather( alertMessage: { [weak self] in
+                        guard let self = self else { return }
+                        self.activityIndicatorView.stopAnimating()
+                        self.presentAlertController(message: $0)
+                    }) else { return }
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.activityIndicatorView.stopAnimating()
+                self.maxTempLabel.text = String(weatherData.maxTemp)
+                self.minTempLabel.text = String(weatherData.minTemp)
+                switch weatherData.weather {
+                case Weather.sunny:
+                    let sunnyImage = UIImage(named: Weather.sunny)
+                    self.weatherImageView.image = sunnyImage
+                    self.weatherImageView.tintColor = .red
+                case Weather.cloudy:
+                    let cloudyImage = UIImage(named: Weather.cloudy)
+                    self.weatherImageView.image = cloudyImage
+                    self.weatherImageView.tintColor = .gray
+                case Weather.rainy:
+                    let rainyImage = UIImage(named: Weather.rainy)
+                    self.weatherImageView.image = rainyImage
+                    self.weatherImageView.tintColor = .blue
+                default:
+                    return
+                }
+            }
         }
     }
 

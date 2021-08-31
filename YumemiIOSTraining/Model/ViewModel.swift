@@ -9,31 +9,34 @@ import Foundation
 import YumemiWeather
 
 protocol WeatherModel {
-    func fetchWeather(alertMessage: (String) -> Void) -> WeatherData?
+    func fetchWeather(alertMessage: @escaping (String) -> Void) -> WeatherData?
 }
 
 final class WeatherModelImpl: WeatherModel {
     
-    func fetchWeather(alertMessage: (String) -> Void) -> WeatherData? {
-        do {
-            guard let jsonString = encodeFetchWeatherParameter(
-                    area: "tokyo", date: Date()) else { return nil }
-            let jsonStringWeather = try YumemiWeather.fetchWeather(jsonString)
-            guard let weatherData = decodeFetchWeatherReturns(
-                    jsonString: jsonStringWeather) else { return nil }
-            return weatherData
-        } catch {
-            switch error {
-            case YumemiWeatherError.invalidParameterError:
-                alertMessage("無効なパラメータエラーです。")
-                return nil
-            case YumemiWeatherError.unknownError:
-                alertMessage("不明なエラーです。")
-                return nil
-            default:
-                fatalError()
+    func fetchWeather(alertMessage: @escaping (String) -> Void) -> WeatherData? {
+        guard let jsonString = encodeFetchWeatherParameter(
+                area: "tokyo", date: Date()) else { return nil }
+        var jsonStringWeather: String?
+        DispatchQueue.global(qos: .userInitiated).sync {
+            do {
+                jsonStringWeather = try YumemiWeather.syncFetchWeather(jsonString)
+            } catch {
+                DispatchQueue.main.async {
+                switch error {
+                case YumemiWeatherError.invalidParameterError:
+                        alertMessage("無効なパラメータエラーです。")
+
+                case YumemiWeatherError.unknownError:
+                        alertMessage("不明なエラーです。")
+                default:
+                        fatalError()
+                    }
+                }
             }
         }
+        let weatherData = decodeFetchWeatherReturns(jsonString: jsonStringWeather ?? "")
+        return weatherData
     }
     
     private func encodeFetchWeatherParameter(area: String, date: Date) -> String? {
