@@ -19,22 +19,18 @@ final class WeatherModelImpl: WeatherModel {
         DispatchQueue.global(qos: .userInitiated).sync {
             do {
                 guard let jsonString = encodeFetchWeatherParameter(
-                               area: "tokyo", date: Date()) else { return }
+                        area: "tokyo", date: Date()) else { return }
                 let jsonStringWeather = try YumemiWeather.syncFetchWeather(jsonString)
                 guard let data = self.decodeFetchWeatherReturns(jsonString: jsonStringWeather) else { return }
-                DispatchQueue.main.async {
-                    weatherData(data)
-                }
+                weatherData(data)
             } catch {
-                DispatchQueue.main.async {
-                    switch error {
-                    case YumemiWeatherError.invalidParameterError:
-                        alertMessage("無効なパラメーターです")
-                    case YumemiWeatherError.unknownError:
-                        alertMessage("不明なエラーです")
-                    default:
-                        fatalError()
-                    }
+                switch error {
+                case YumemiWeatherError.invalidParameterError:
+                    alertMessage("無効なパラメーターです")
+                case YumemiWeatherError.unknownError:
+                    alertMessage("不明なエラーです")
+                default:
+                    fatalError()
                 }
             }
         }

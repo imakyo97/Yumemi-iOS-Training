@@ -55,7 +55,7 @@ final class ViewController: UIViewController {
         showWeather()
     }
 
-    @IBAction func didTapReloadButton(_ sender: Any) {
+    @IBAction private func didTapReloadButton(_ sender: Any) {
         showWeather()
     }
 
@@ -68,11 +68,9 @@ final class ViewController: UIViewController {
 
     private func showWeather() {
         activityIndicatorView.startAnimating()
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
+        DispatchQueue.main.async {
             self.weatherModel?.fetchWeather(
-                weatherData: { [weak self] weatherData in
-                    guard let self = self else { return }
+                weatherData: { weatherData in
                     self.maxTempLabel.text = String(weatherData.maxTemp)
                     self.minTempLabel.text = String(weatherData.minTemp)
                     switch weatherData.weather {
@@ -92,17 +90,13 @@ final class ViewController: UIViewController {
                         fatalError()
                     }
                 },
-                alertMessage: { [weak self] alertMessage in
-                    guard let self = self else { return }
+                alertMessage: { alertMessage in
                     self.presentAlertController(message: alertMessage)
                 }
             )
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.activityIndicatorView.stopAnimating()
-                }
-            }
+            self.activityIndicatorView.stopAnimating()
         }
+    }
 
     private func presentAlertController(message: String) {
         let alert = UIAlertController(
@@ -120,7 +114,7 @@ final class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
-    @IBAction func didTapCloseButton(_ sender: Any) {
+    @IBAction private func didTapCloseButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 }

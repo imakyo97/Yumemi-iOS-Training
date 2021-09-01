@@ -31,7 +31,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EOO-ap-iOb">
+                            <stackView opaque="NO" contentMode="scaleToFill" restorationIdentifier="WeatherStackView" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EOO-ap-iOb">
                                 <rect key="frame" x="103.5" y="331" width="207" height="234"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="WeatherImageView" translatesAutoresizingMaskIntoConstraints="NO" id="tba-PT-a0w">

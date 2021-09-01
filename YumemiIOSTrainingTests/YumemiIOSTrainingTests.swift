@@ -13,50 +13,71 @@ class YumemiIOSTrainingTests: XCTestCase {
 
     func testShowSunny() {
         let sunny = "sunny"
+        let mockWeatherModel = MockWeatherModel(weather: sunny)
 
         let viewController = instantiateViewController(
-            weatherModel: MockWeatherModel(weather: sunny)
+            weatherModel: mockWeatherModel
         )
         viewController.loadViewIfNeeded()
 
         let reloadButton: UIButton = fetchReloadButton(from: viewController)
         reloadButton.sendActions(for: .touchUpInside)
 
-        let weatherImage: UIImage = fetchWeatherImage(from: viewController)
-        let sunnyImage: UIImage = UIImage(named: sunny)!
-        XCTAssertEqual(weatherImage, sunnyImage, "画面に晴れ画像が表示されること")
+        let exp = expectation(description: "wait for finish")
+
+        DispatchQueue.main.async {
+            let weatherImageView: UIImageView = self.fetchWeatherImage(from: viewController)
+            let sunnyImage: UIImage = UIImage(named: sunny)!
+            XCTAssertEqual(weatherImageView.image, sunnyImage, "画面に晴れ画像が表示されること")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 10)
     }
 
     func testShowCloudy() {
         let cloudy = "cloudy"
+        let mockWeatherModel = MockWeatherModel(weather: cloudy)
 
         let viewController = instantiateViewController(
-            weatherModel: MockWeatherModel(weather: cloudy)
+            weatherModel: mockWeatherModel
         )
         viewController.loadViewIfNeeded()
 
         let reloadButton: UIButton = fetchReloadButton(from: viewController)
         reloadButton.sendActions(for: .touchUpInside)
 
-        let weatherImage: UIImage = fetchWeatherImage(from: viewController)
-        let cloudyImage: UIImage = UIImage(named: cloudy)!
-        XCTAssertEqual(weatherImage, cloudyImage, "画面に曇り画像が表示されること")
+        let exp = expectation(description: "wait for finish")
+
+        DispatchQueue.main.async {
+            let weatherImageView: UIImageView = self.fetchWeatherImage(from: viewController)
+            let cloudyImage: UIImage = UIImage(named: cloudy)!
+            XCTAssertEqual(weatherImageView.image, cloudyImage, "画面に曇り画像が表示されること")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 10)
     }
 
     func testShowRainy() {
         let rainy = "rainy"
-
+        let mockWeatherModel = MockWeatherModel(weather: rainy)
+        
         let viewController = instantiateViewController(
-            weatherModel: MockWeatherModel(weather: rainy)
+            weatherModel: mockWeatherModel
         )
         viewController.loadViewIfNeeded()
 
         let reloadButton: UIButton = fetchReloadButton(from: viewController)
         reloadButton.sendActions(for: .touchUpInside)
 
-        let weatherImage: UIImage = fetchWeatherImage(from: viewController)
-        let rainyImage: UIImage = UIImage(named: rainy)!
-        XCTAssertEqual(weatherImage, rainyImage, "画面に雨画像が表示されること")
+        let exp = expectation(description: "wait for finish")
+
+        DispatchQueue.main.async {
+            let weatherImageView: UIImageView = self.fetchWeatherImage(from: viewController)
+            let rainyImage: UIImage = UIImage(named: rainy)!
+            XCTAssertEqual(weatherImageView.image, rainyImage, "画面に雨画像が表示されること")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 10)
     }
 
     func testShowTempLabelText() {
@@ -72,14 +93,20 @@ class YumemiIOSTrainingTests: XCTestCase {
             fetchReloadButton(from: viewController)
         reloadButton.sendActions(for: .touchUpInside)
 
-        let tempLabels: [String : UILabel] =
-            fetchTempLabe(from: viewController)
-        XCTAssertEqual(tempLabels["minTempLabel"]?.text,
-                       String(mockWeatherModel.minTemp),
-                       "天気予報の最低気温がUILabelに反映されること")
-        XCTAssertEqual(tempLabels["maxTempLabel"]?.text,
-                       String(mockWeatherModel.maxTemp),
-                       "天気予報の最高気温がUILabelに反映されること")
+        let exp = expectation(description: "wait for finish")
+
+        DispatchQueue.main.async {
+            let tempLabels: [String : UILabel] =
+                self.fetchTempLabe(from: viewController)
+            XCTAssertEqual(tempLabels["minTempLabel"]?.text,
+                           String(mockWeatherModel.minTemp),
+                           "天気予報の最低気温がUILabelに反映されること")
+            XCTAssertEqual(tempLabels["maxTempLabel"]?.text,
+                           String(mockWeatherModel.maxTemp),
+                           "天気予報の最高気温がUILabelに反映されること")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 10)
     }
 
     private func instantiateViewController(weatherModel: WeatherModel) -> ViewController {
@@ -97,16 +124,15 @@ class YumemiIOSTrainingTests: XCTestCase {
     private func fetchReloadButton(from vc: ViewController) -> UIButton {
         vc.view.subviews
             .compactMap { $0 as? UIButton }
-            .filter { $0.titleLabel?.text == "Reload" }.first!
+            .filter { $0.restorationIdentifier == "ReloadButton" }.first!
     }
 
-    private func fetchWeatherImage(from vc: ViewController) -> UIImage {
+    private func fetchWeatherImage(from vc: ViewController) -> UIImageView {
         let stackView: UIStackView = vc.view.subviews
             .first(where: { $0 is UIStackView } ) as! UIStackView
         let imageView: UIImageView = stackView.subviews
-            .compactMap { $0 as? UIImageView }
-            .filter { $0.restorationIdentifier == "WeatherImageView" }.first!
-        return imageView.image!
+            .first(where: { $0 is UIImageView }) as! UIImageView
+        return imageView
     }
 
     private func fetchTempLabe(from vc: ViewController) -> [String: UILabel] {
@@ -132,9 +158,7 @@ class YumemiIOSTrainingTests: XCTestCase {
 
 final class MockWeatherModel: WeatherModel {
 
-    var delegate: WeatherModelDelegate?
-
-    private let weatherData: WeatherData?
+    let weatherData: WeatherData
 
     let maxTemp: Int = 30
     let minTemp: Int = 25
@@ -151,7 +175,8 @@ final class MockWeatherModel: WeatherModel {
         )
     }
 
-    func fetchWeather() {
-        delegate?.fetchedWeather(weatherData: weatherData!)
+    func fetchWeather(weatherData: @escaping (WeatherData) -> (),
+                      alertMessage: @escaping (String) -> ()) {
+        weatherData(self.weatherData)
     }
 }
