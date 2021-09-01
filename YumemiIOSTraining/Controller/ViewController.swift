@@ -34,7 +34,6 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        weatherModel?.delegate = self
         settingWillEnterForegroundObserver()
         setupActivityIndicatorView()
     }
@@ -71,7 +70,35 @@ final class ViewController: UIViewController {
         activityIndicatorView.startAnimating()
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-            self.weatherModel?.fetchWeather()
+            self.weatherModel?.fetchWeather(
+                weatherData: { [weak self] weatherData in
+                    guard let weatherData = weatherData else { return }
+                    guard let self = self else { return }
+                    self.maxTempLabel.text = String(weatherData.maxTemp)
+                    self.minTempLabel.text = String(weatherData.minTemp)
+                    switch weatherData.weather {
+                    case Weather.sunny:
+                        let sunnyImage = UIImage(named: Weather.sunny)
+                        self.weatherImageView.image = sunnyImage
+                        self.weatherImageView.tintColor = .red
+                    case Weather.cloudy:
+                        let cloudyImage = UIImage(named: Weather.cloudy)
+                        self.weatherImageView.image = cloudyImage
+                        self.weatherImageView.tintColor = .gray
+                    case Weather.rainy:
+                        let rainyImage = UIImage(named: Weather.rainy)
+                        self.weatherImageView.image = rainyImage
+                        self.weatherImageView.tintColor = .blue
+                    default:
+                        fatalError()
+                    }
+                },
+                alertMessage: { [weak self] alertMessage in
+                    guard let alertMessage = alertMessage else { return }
+                    guard let self = self else { return }
+                    self.presentAlertController(message: alertMessage)
+                }
+            )
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.activityIndicatorView.stopAnimating()
@@ -98,33 +125,6 @@ final class ViewController: UIViewController {
 
     @IBAction func didTapCloseButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
-    }
-}
-
-extension ViewController: WeatherModelDelegate {
-    func fetchedWeather(weatherData: WeatherData) {
-        self.maxTempLabel.text = String(weatherData.maxTemp)
-        self.minTempLabel.text = String(weatherData.minTemp)
-        switch weatherData.weather {
-        case Weather.sunny:
-            let sunnyImage = UIImage(named: Weather.sunny)
-            self.weatherImageView.image = sunnyImage
-            self.weatherImageView.tintColor = .red
-        case Weather.cloudy:
-            let cloudyImage = UIImage(named: Weather.cloudy)
-            self.weatherImageView.image = cloudyImage
-            self.weatherImageView.tintColor = .gray
-        case Weather.rainy:
-            let rainyImage = UIImage(named: Weather.rainy)
-            self.weatherImageView.image = rainyImage
-            self.weatherImageView.tintColor = .blue
-        default:
-            fatalError()
-        }
-    }
-
-    func presentAlertMessage(alertMessage: String) {
-        presentAlertController(message: alertMessage)
     }
 }
 

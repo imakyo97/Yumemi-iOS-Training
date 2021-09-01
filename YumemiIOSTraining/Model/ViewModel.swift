@@ -9,36 +9,29 @@ import Foundation
 import YumemiWeather
 
 protocol WeatherModel {
-    func fetchWeather()
-    var delegate: WeatherModelDelegate? { get set }
-}
-
-protocol WeatherModelDelegate: AnyObject {
-    func fetchedWeather(weatherData: WeatherData)
-    func presentAlertMessage(alertMessage: String)
+    func fetchWeather(weatherData: @escaping (WeatherData?) -> (),
+                      alertMessage: @escaping (String?) -> ())
 }
 
 final class WeatherModelImpl: WeatherModel {
-
-    weak var delegate: WeatherModelDelegate?
-    
-    func fetchWeather() {
-        guard let jsonString = encodeFetchWeatherParameter(
-                area: "tokyo", date: Date()) else { return }
+    func fetchWeather(weatherData: @escaping (WeatherData?) -> (),
+                      alertMessage: @escaping (String?) -> ()) {
         DispatchQueue.global(qos: .userInitiated).sync {
             do {
+                guard let jsonString = encodeFetchWeatherParameter(
+                               area: "tokyo", date: Date()) else { return }
                 let jsonStringWeather = try YumemiWeather.syncFetchWeather(jsonString)
-                guard let weatherData = self.decodeFetchWeatherReturns(jsonString: jsonStringWeather) else { return }
+                let data = self.decodeFetchWeatherReturns(jsonString: jsonStringWeather)
                 DispatchQueue.main.async {
-                    self.delegate?.fetchedWeather(weatherData: weatherData)
+                    weatherData(data)
                 }
             } catch {
                 DispatchQueue.main.async {
                     switch error {
                     case YumemiWeatherError.invalidParameterError:
-                        self.delegate?.presentAlertMessage(alertMessage: "無効なパラメータエラーです")
+                        alertMessage("無効なパラメーターです")
                     case YumemiWeatherError.unknownError:
-                        self.delegate?.presentAlertMessage(alertMessage: "不明なエラーです")
+                        alertMessage("不明なエラーです")
                     default:
                         fatalError()
                     }
