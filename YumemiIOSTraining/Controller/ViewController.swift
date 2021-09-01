@@ -72,7 +72,6 @@ final class ViewController: UIViewController {
             guard let self = self else { return }
             self.weatherModel?.fetchWeather(
                 weatherData: { [weak self] weatherData in
-                    guard let weatherData = weatherData else { return }
                     guard let self = self else { return }
                     self.maxTempLabel.text = String(weatherData.maxTemp)
                     self.minTempLabel.text = String(weatherData.minTemp)
@@ -94,7 +93,6 @@ final class ViewController: UIViewController {
                     }
                 },
                 alertMessage: { [weak self] alertMessage in
-                    guard let alertMessage = alertMessage else { return }
                     guard let self = self else { return }
                     self.presentAlertController(message: alertMessage)
                 }
@@ -105,7 +103,6 @@ final class ViewController: UIViewController {
                 }
             }
         }
-
 
     private func presentAlertController(message: String) {
         let alert = UIAlertController(

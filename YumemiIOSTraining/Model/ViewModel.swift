@@ -9,19 +9,19 @@ import Foundation
 import YumemiWeather
 
 protocol WeatherModel {
-    func fetchWeather(weatherData: @escaping (WeatherData?) -> (),
-                      alertMessage: @escaping (String?) -> ())
+    func fetchWeather(weatherData: @escaping (WeatherData) -> (),
+                      alertMessage: @escaping (String) -> ())
 }
 
 final class WeatherModelImpl: WeatherModel {
-    func fetchWeather(weatherData: @escaping (WeatherData?) -> (),
-                      alertMessage: @escaping (String?) -> ()) {
+    func fetchWeather(weatherData: @escaping (WeatherData) -> (),
+                      alertMessage: @escaping (String) -> ()) {
         DispatchQueue.global(qos: .userInitiated).sync {
             do {
                 guard let jsonString = encodeFetchWeatherParameter(
                                area: "tokyo", date: Date()) else { return }
                 let jsonStringWeather = try YumemiWeather.syncFetchWeather(jsonString)
-                let data = self.decodeFetchWeatherReturns(jsonString: jsonStringWeather)
+                guard let data = self.decodeFetchWeatherReturns(jsonString: jsonStringWeather) else { return }
                 DispatchQueue.main.async {
                     weatherData(data)
                 }
