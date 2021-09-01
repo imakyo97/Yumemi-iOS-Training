@@ -9,34 +9,42 @@ import Foundation
 import YumemiWeather
 
 protocol WeatherModel {
-    func fetchWeather(alertMessage: @escaping (String) -> Void) -> WeatherData?
+    func fetchWeather()
+    var delegate: WeatherModelDelegate? { get set }
+}
+
+protocol WeatherModelDelegate: AnyObject {
+    func fetchedWeather(weatherData: WeatherData)
+    func presentAlertMessage(alertMessage: String)
 }
 
 final class WeatherModelImpl: WeatherModel {
+
+    weak var delegate: WeatherModelDelegate?
     
-    func fetchWeather(alertMessage: @escaping (String) -> Void) -> WeatherData? {
+    func fetchWeather() {
         guard let jsonString = encodeFetchWeatherParameter(
-                area: "tokyo", date: Date()) else { return nil }
-        var jsonStringWeather: String?
+                area: "tokyo", date: Date()) else { return }
         DispatchQueue.global(qos: .userInitiated).sync {
             do {
-                jsonStringWeather = try YumemiWeather.syncFetchWeather(jsonString)
+                let jsonStringWeather = try YumemiWeather.syncFetchWeather(jsonString)
+                guard let weatherData = self.decodeFetchWeatherReturns(jsonString: jsonStringWeather) else { return }
+                DispatchQueue.main.async {
+                    self.delegate?.fetchedWeather(weatherData: weatherData)
+                }
             } catch {
                 DispatchQueue.main.async {
-                switch error {
-                case YumemiWeatherError.invalidParameterError:
-                        alertMessage("無効なパラメータエラーです。")
-
-                case YumemiWeatherError.unknownError:
-                        alertMessage("不明なエラーです。")
-                default:
+                    switch error {
+                    case YumemiWeatherError.invalidParameterError:
+                        self.delegate?.presentAlertMessage(alertMessage: "無効なパラメータエラーです")
+                    case YumemiWeatherError.unknownError:
+                        self.delegate?.presentAlertMessage(alertMessage: "不明なエラーです")
+                    default:
                         fatalError()
                     }
                 }
             }
         }
-        let weatherData = decodeFetchWeatherReturns(jsonString: jsonStringWeather ?? "")
-        return weatherData
     }
     
     private func encodeFetchWeatherParameter(area: String, date: Date) -> String? {

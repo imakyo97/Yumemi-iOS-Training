@@ -132,6 +132,8 @@ class YumemiIOSTrainingTests: XCTestCase {
 
 final class MockWeatherModel: WeatherModel {
 
+    var delegate: WeatherModelDelegate?
+
     private let weatherData: WeatherData?
 
     let maxTemp: Int = 30
@@ -149,7 +151,7 @@ final class MockWeatherModel: WeatherModel {
         )
     }
 
-    func fetchWeather(alertMessage: @escaping (String) -> Void) -> WeatherData? {
-        return weatherData
+    func fetchWeather() {
+        delegate?.fetchedWeather(weatherData: weatherData!)
     }
 }
