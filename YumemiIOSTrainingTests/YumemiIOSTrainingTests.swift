@@ -124,7 +124,7 @@ class YumemiIOSTrainingTests: XCTestCase {
     private func fetchReloadButton(from vc: ViewController) -> UIButton {
         vc.view.subviews
             .compactMap { $0 as? UIButton }
-            .filter { $0.restorationIdentifier == "ReloadButton" }.first!
+            .first(where: { $0.restorationIdentifier == "ReloadButton" })!
     }
 
     private func fetchWeatherImage(from vc: ViewController) -> UIImageView {
